@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registreren - FatbikeClub</title>
+  </head>
+  <body>
+    <h1>Maak een account aan</h1>
+
+    <form id="signup-form">
+      <input type="email" id="email" placeholder="E-mail" required />
+      <input type="password" id="password" placeholder="Wachtwoord" required />
+      <button type="submit">Registreren</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+      const SUPABASE_URL = 'https://qadayrqtxiyrugpjwhia.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhZGF5cnF0eGl5cnVncGp3aGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxMTI2NzcsImV4cCI6MjA2NTY4ODY3N30.ew1iLF2zxoYpJi61qqElX1GyAkl9Hf4dOdcOyJ58spw';
+
+      const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const form = document.getElementById("signup-form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        const { error } = await supabase.auth.signUp({ email, password });
+
+        if (error) {
+          alert("Fout: " + error.message);
+        } else {
+          alert("Gelukt! Check je e-mail om te bevestigen.");
+        }
+      });
+    </script>
+  </body>
+</html>
