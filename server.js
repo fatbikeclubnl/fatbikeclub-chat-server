@@ -1,39 +1,27 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const cors = require('cors');
-
+const express = require("express");
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
-});
+const http = require("http").createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(http);
 
-app.use(cors());
-app.get('/', (req, res) => {
-  res.send('Fatbikeclub Chat Server is running');
-});
+const path = require("path");
 
-io.on('connection', (socket) => {
-  console.log('Gebruiker verbonden:', socket.id);
+// Serve de index.html vanuit de rootmap
+app.use(express.static(path.join(__dirname)));
 
-  socket.on('join', (username) => {
-    console.log(`${username} is verbonden met de chat.`);
+io.on("connection", (socket) => {
+  console.log("Gebruiker verbonden");
+
+  socket.on("join", (username) => {
+    console.log(`${username} is aangesloten`);
   });
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Gebruiker ontkoppeld:', socket.id);
+  socket.on("chat message", (msg) => {
+    io.emit("chat message", msg);
   });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 10000;
+http.listen(PORT, () => {
   console.log(`Chat server draait op poort ${PORT}`);
 });
